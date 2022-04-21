@@ -58,9 +58,9 @@ resource "aws_s3_object" "lambda_hello_world" {
   bucket = aws_s3_bucket.lambda_bucket.id
 
   key = "hello-world.zip"
-  source = "${path.module}/hello-world.zip"
+  source = "${abspath(path.module)}/hello-world.zip"
 
-  etag = filemd5("${path.module}/hello-world.zip")
+  etag = filemd5("${abspath(path.module)}/hello-world.zip")
 }
 
 // Lambda function
@@ -95,7 +95,7 @@ resource "aws_lambda_function" "hello_world" {
   runtime = "nodejs12.x"
   handler = "hello.handler"
 
-  source_code_hash = filebase64sha256("${path.module}/hello-world.zip")
+  source_code_hash = filebase64sha256("${abspath(path.module)}/hello-world.zip")
 
   role = aws_iam_role.lambda_exec.arn
 }
