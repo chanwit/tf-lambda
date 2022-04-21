@@ -10,4 +10,4 @@ fi
 kubectl create secret generic tf-aws-keys \
     -n flux-system \
     --from-literal=access_key=$AWS_ACCESS_KEY_ID \
-    --from-literal=secrey_key=$AWS_SECRET_ACCESS_KEY
+    --from-literal=secret_key=$AWS_SECRET_ACCESS_KEY
