@@ -54,13 +54,21 @@ resource "aws_s3_bucket" "lambda_bucket" {
   force_destroy = true
 }
 
+// Lambda function source
+data "archive_file" "lambda_hello_world" {
+  type = "zip"
+
+  source_dir = "${path.module}/hello-world"
+  output_path = "${path.module}/hello-world.zip"
+}
+
 resource "aws_s3_object" "lambda_hello_world" {
   bucket = aws_s3_bucket.lambda_bucket.id
 
   key = "hello-world.zip"
-  source = "${abspath(path.module)}/hello-world.zip"
+  source = data.archive_file.lambda_hello_world.output_path
 
-  etag = filemd5("${abspath(path.module)}/hello-world.zip")
+  etag = filemd5(data.archive_file.lambda_hello_world.output_path)
 }
 
 // Lambda function
@@ -87,7 +95,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
 
 resource "aws_lambda_function" "hello_world" {
   function_name = "HelloWorld"
-  description = "Chanwit Test tf-lambda"
+  description = "SteveW webinar"
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key = aws_s3_object.lambda_hello_world.key
@@ -95,7 +103,7 @@ resource "aws_lambda_function" "hello_world" {
   runtime = "nodejs12.x"
   handler = "hello.handler"
 
-  source_code_hash = filebase64sha256("${abspath(path.module)}/hello-world.zip")
+  source_code_hash = data.archive_file.lambda_hello_world.output_base64sha256
 
   role = aws_iam_role.lambda_exec.arn
 }
