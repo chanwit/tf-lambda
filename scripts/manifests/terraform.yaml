@@ -5,7 +5,7 @@ metadata:
   name: aws-lambda
   namespace: flux-system
 spec:
-  approvePlan: ""
+  approvePlan: "auto"
   destroyResourcesOnDeletion: true
   path: ./
   interval: 1m
