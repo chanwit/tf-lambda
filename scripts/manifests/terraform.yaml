@@ -16,3 +16,8 @@ spec:
   varsFrom:
     - name: tf-aws-keys
       kind: Secret
+  writeOutputsToSecret:
+    name: aws-lambda-output
+    outputs:
+      - base_url
+
